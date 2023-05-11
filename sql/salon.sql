@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.4
+-- version 5.1.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2023 at 09:46 AM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.2.0
+-- Generation Time: May 11, 2023 at 12:44 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 7.4.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -34,8 +33,8 @@ CREATE TABLE `appointments` (
   `salon_id` int(11) NOT NULL,
   `date` varchar(255) NOT NULL,
   `time` varchar(255) NOT NULL,
-  `booked` tinyint(1) NOT NULL DEFAULT '0',
-  `cancelled` tinyint(1) NOT NULL DEFAULT '0'
+  `booked` tinyint(1) NOT NULL DEFAULT 0,
+  `cancelled` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -51,7 +50,18 @@ INSERT INTO `appointments` (`id`, `customer_id`, `salon_id`, `date`, `time`, `bo
 (47, 32, 5, '2023-03-28', '10:30 PM', 0, 1),
 (48, 32, 29, '2023-03-27', '9:30 PM', 0, 1),
 (49, 41, 31, '2023-03-28', '3:30 PM', 1, 0),
-(50, 32, 5, '2023-03-28', '7:30 PM', 0, 0);
+(50, 32, 5, '2023-03-28', '7:30 PM', 0, 1),
+(51, 42, 5, '2023-05-04', '1:30 PM', 0, 1),
+(52, 42, 5, '2023-05-04', '7:30 PM', 0, 1),
+(53, 42, 5, '2023-05-04', '3:30 PM', 0, 1),
+(54, 42, 5, '2023-05-04', '7:30 PM', 0, 1),
+(55, 42, 5, '2023-05-04', '11:30 AM', 0, 1),
+(56, 42, 5, '2023-05-04', '6:30 PM', 0, 1),
+(57, 42, 29, '2023-05-05', '12:30 PM', 1, 0),
+(58, 32, 29, '2023-05-05', '1:30 PM', 0, 0),
+(59, 32, 30, '2023-05-05', '12:30 PM', 0, 0),
+(60, 32, 5, '2023-05-05', '12:30 PM', 1, 0),
+(61, 32, 5, '2023-05-05', '2:30 PM', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -67,7 +77,7 @@ CREATE TABLE `barbers` (
   `cnic` varchar(15) NOT NULL,
   `password` varchar(255) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `has_salon` tinyint(1) DEFAULT '0'
+  `has_salon` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -110,7 +120,18 @@ INSERT INTO `booked_services` (`id`, `appointment_id`, `service_id`) VALUES
 (37, 47, 13),
 (38, 48, 18),
 (39, 49, 22),
-(40, 50, 16);
+(40, 50, 16),
+(41, 51, 16),
+(42, 52, 17),
+(43, 53, 16),
+(44, 54, 16),
+(45, 54, 14),
+(46, 55, 16),
+(47, 56, 16),
+(48, 57, 18),
+(49, 58, 18),
+(50, 60, 16),
+(51, 61, 16);
 
 -- --------------------------------------------------------
 
@@ -122,10 +143,10 @@ CREATE TABLE `chat` (
   `id` int(11) NOT NULL,
   `sender` int(11) NOT NULL,
   `receiver` int(11) NOT NULL,
-  `message` text,
+  `message` text DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `seen` tinyint(4) NOT NULL DEFAULT '0'
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `seen` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -169,7 +190,15 @@ INSERT INTO `chat` (`id`, `sender`, `receiver`, `message`, `image`, `date`, `see
 (45, 5, 38, 'Hn g bolo v', '', '2023-03-27 20:54:29', 0),
 (46, 32, 5, 'Jnb', '', '2023-03-27 21:03:14', 0),
 (47, 32, 29, 'Bhsiiiiigxdg', '', '2023-03-27 21:03:37', 0),
-(48, 32, 36, 'Hello', '', '2023-03-28 06:59:16', 0);
+(48, 32, 36, 'Hello', '', '2023-03-28 06:59:16', 0),
+(49, 42, 5, 'Dyr7d6f8g', '', '2023-04-12 10:31:34', 0),
+(50, 42, 5, 'Hello', '', '2023-05-05 05:08:21', 0),
+(51, 42, 5, NULL, 'uploads/chat/64548f4b57d37.jpg', '2023-05-05 05:08:27', 0),
+(52, 42, 5, 'Fjcgj', '', '2023-05-05 05:08:31', 0),
+(53, 43, 5, NULL, 'uploads/chat/6454b8be15777.jpg', '2023-05-05 08:05:18', 0),
+(54, 43, 5, 'Hello', '', '2023-05-05 08:05:26', 0),
+(55, 43, 5, NULL, 'uploads/chat/6454ba2504464.png', '2023-05-05 08:11:17', 0),
+(56, 43, 5, 'Make', '', '2023-05-05 08:11:25', 0);
 
 -- --------------------------------------------------------
 
@@ -190,6 +219,8 @@ CREATE TABLE `chat_heads` (
 INSERT INTO `chat_heads` (`salon`, `customer`, `last_msg`) VALUES
 (5, 32, 'Jnb'),
 (5, 38, 'Hn g bolo v'),
+(5, 42, 'Fjcgj'),
+(5, 43, 'Make'),
 (29, 32, 'Bhsiiiiigxdg'),
 (29, 38, 'Its shazam'),
 (30, 32, 'Ok'),
@@ -222,7 +253,9 @@ INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `address`, `city`, `pas
 (38, 'Touseef ahmed ', 'touseefcid9@gmail.com', '03056184710', 'people colony', 'Gujranwala ', '25d55ad283aa400af464c76d713c07ad', NULL),
 (39, 'mian g', 'sahilcid3@gmail.com', '03101234567', 'people colony', 'Gujranwala ', '25d55ad283aa400af464c76d713c07ad', NULL),
 (40, 'faraz', 'faraz@gmail.com', '03123456789', 'Jinnah road ', 'Gujranwala ', '25d55ad283aa400af464c76d713c07ad', NULL),
-(41, 'farukh', 'farukh@gmail.com', '03009876543', 'alam chowk', 'Gujranwala ', '25f9e794323b453885f5181f1b624d0b', NULL);
+(41, 'farukh', 'farukh@gmail.com', '03009876543', 'alam chowk', 'Gujranwala ', '25f9e794323b453885f5181f1b624d0b', NULL),
+(42, 'ch', 'mian@gmail.com', '03120796952', 'shkjtgv', 'Gujranwala ', '25d55ad283aa400af464c76d713c07ad', NULL),
+(43, 'touseef ', 'drclump1947@gmail.com', '03456789019', 'dsfv', 'Gujranwala ', '25d55ad283aa400af464c76d713c07ad', NULL);
 
 -- --------------------------------------------------------
 
@@ -262,9 +295,9 @@ CREATE TABLE `orders` (
   `salon_id` int(11) NOT NULL,
   `address` varchar(255) NOT NULL,
   `phone` varchar(20) NOT NULL,
-  `datetime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `confirmed` tinyint(4) NOT NULL DEFAULT '0',
-  `reject` tinyint(4) NOT NULL DEFAULT '0'
+  `datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `confirmed` tinyint(4) NOT NULL DEFAULT 0,
+  `reject` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -272,11 +305,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `customer_id`, `salon_id`, `address`, `phone`, `datetime`, `confirmed`, `reject`) VALUES
-(1, 32, 5, 'peoples colony', '03099303699', '2023-04-08 08:28:39', 0, 1),
-(2, 32, 5, 'peoples colony', '03099303699', '2023-04-08 08:29:16', 0, 1),
-(3, 40, 5, 'DC road', '03099303699', '2023-04-08 11:56:37', 1, 0),
-(4, 32, 5, 'jinnah road', '03099303699', '2023-04-08 12:07:04', 0, 1),
-(5, 40, 5, 'uiuytrd', '03099303699', '2023-04-08 12:13:27', 1, 0);
+(3, 40, 5, 'DC road', '03099303699', '2023-04-08 06:56:37', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -296,14 +325,7 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`) VALUES
-(1, 1, 7, 2),
-(2, 1, 8, 3),
-(3, 2, 8, 1),
-(4, 3, 8, 3),
-(5, 4, 8, 4),
-(6, 5, 8, 2),
-(7, 2, 8, 2),
-(8, 2, 8, 2);
+(4, 3, 7, 3);
 
 -- --------------------------------------------------------
 
@@ -327,10 +349,8 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `name`, `p_desc`, `price`, `quantity`, `image`, `salon_id`) VALUES
 (7, 'Beard Oil', 'Good for growth of Beard', 500, 10, 'uploads/1110941843225.png', 5),
-(8, 'Face Wash', 'OIl Control ', 490, 20, 'uploads/1240825660523.png', 5),
-(9, 'Hair Color', 'Olivia Hair Color 42 Number', 1500, 19, 'uploads/622123314398.png', 5),
-(10, 'Wax', 'jkjhgfds', 500, 20, 'uploads/1194773845873.png', 5),
-(11, 'Hair Oil', 'Good for Hair Growth.', 200, 2, 'uploads/1168742192463.png', 5);
+(8, 'yurttr', 'ttfrttyut', 100, 1, 'uploads/1021155556033.png', 29),
+(9, 'rdrdrf', 'fddgfdg', 200, 1, 'uploads/48194247130.png', 29);
 
 -- --------------------------------------------------------
 
@@ -345,12 +365,12 @@ CREATE TABLE `salons` (
   `city` varchar(255) NOT NULL,
   `certificate` varchar(255) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `about` longtext,
+  `about` longtext DEFAULT NULL,
   `open_time` time DEFAULT NULL,
   `close_time` time DEFAULT NULL,
-  `verified` tinyint(1) NOT NULL DEFAULT '0',
-  `cancelled` tinyint(4) NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `verified` tinyint(1) NOT NULL DEFAULT 0,
+  `cancelled` tinyint(4) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
   `barber_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -375,7 +395,7 @@ CREATE TABLE `salon_ratings` (
   `id` int(11) NOT NULL,
   `rating` tinyint(4) DEFAULT NULL,
   `review` varchar(255) DEFAULT NULL,
-  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `datetime` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `salon_id` int(11) NOT NULL,
   `customer_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -386,11 +406,8 @@ CREATE TABLE `salon_ratings` (
 
 INSERT INTO `salon_ratings` (`id`, `rating`, `review`, `datetime`, `salon_id`, `customer_id`) VALUES
 (1, 3, 'Good Salon', '2023-03-04 16:02:53', 5, 32),
-(32, 4, '', '2023-03-27 17:35:49', 29, 32),
-(33, 0, 'Fghrer', '2023-03-27 21:41:21', 29, 38),
-(34, 3, 'Good experience ', '2023-03-28 09:18:32', 5, 40),
-(35, 4, 'Nice', '2023-03-28 09:19:01', 29, 40),
-(36, 4, '', '2023-03-28 09:19:14', 29, 40);
+(53, 3, 'Good salon', '2023-05-05 10:06:25', 29, 42),
+(56, 0, 'Good salon', '2023-05-05 12:22:27', 5, 32);
 
 -- --------------------------------------------------------
 
@@ -495,10 +512,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`, `rank`, `image`, `status`) VALUES
-(33, 'zaini', 'Inam', 'zaininam699@gmail.com', '03217766974', '25f9e794323b453885f5181f1b624d0b', 'admin', '285772401.jpg', 'active'),
+(33, 'zaini', 'Inam', 'zaininam699@gmail.com', '03217766974', '25f9e794323b453885f5181f1b624d0b', 'admin', '870309857.png', 'active'),
 (49, 'ali', 'ahmad', 'ali@gmail.com', '03099303699', '25f9e794323b453885f5181f1b624d0b', 'admin', NULL, 'active'),
-(50, 'bilal', 'ahmad', 'bilal@gmail.com', '03124251073', '25f9e794323b453885f5181f1b624d0b', 'employee', NULL, 'active'),
-(51, 'TALHA', 'saab', '1234452@GMAIL.COM', '09876543210', '25d55ad283aa400af464c76d713c07ad', 'employee', NULL, 'active');
+(50, 'bilal', 'ahmad', 'bilal@gmail.com', '03124251073', '25f9e794323b453885f5181f1b624d0b', 'employee', NULL, 'active');
 
 --
 -- Indexes for dumped tables
@@ -509,6 +525,14 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `phone`, `password`
 --
 ALTER TABLE `appointments`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `barbers`
+--
+ALTER TABLE `barbers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`,`phone`),
+  ADD UNIQUE KEY `cnic` (`cnic`);
 
 --
 -- Indexes for table `booked_services`
@@ -606,31 +630,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+
+--
+-- AUTO_INCREMENT for table `barbers`
+--
+ALTER TABLE `barbers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `booked_services`
 --
 ALTER TABLE `booked_services`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `gallery`
+--
+ALTER TABLE `gallery`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `order_items`
@@ -642,7 +678,61 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `salons`
+--
+ALTER TABLE `salons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
+-- AUTO_INCREMENT for table `salon_ratings`
+--
+ALTER TABLE `salon_ratings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
+-- AUTO_INCREMENT for table `salon_workers`
+--
+ALTER TABLE `salon_workers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `services`
+--
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `service_categories`
+--
+ALTER TABLE `service_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `chat_heads`
+--
+ALTER TABLE `chat_heads`
+  ADD CONSTRAINT `chat_heads_ibfk_1` FOREIGN KEY (`salon`) REFERENCES `salons` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `chat_heads_ibfk_2` FOREIGN KEY (`customer`) REFERENCES `customers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `salons`
+--
+ALTER TABLE `salons`
+  ADD CONSTRAINT `salons_ibfk_1` FOREIGN KEY (`barber_id`) REFERENCES `barbers` (`id`),
+  ADD CONSTRAINT `salons_ibfk_2` FOREIGN KEY (`barber_id`) REFERENCES `barbers` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
